@@ -39,11 +39,19 @@ test = trimSilence(test, energyThresh);
 
 % Align signals by cross-correlation on a downsampled envelope to be robust
 downFactor = max(1, round(fs/4000)); % target ~4kHz for speed
-envRef = abs(hilbert(resample(ref,1,downFactor)));
-envTest = abs(hilbert(resample(test,1,downFactor)));
+
+% Toolbox-free decimation
+ref_ds  = ref(1:downFactor:end);
+test_ds = test(1:downFactor:end);
+
+% Envelope extraction
+envRef  = abs(hilbert(ref_ds));
+envTest = abs(hilbert(test_ds));
+
 [c, lags] = xcorr(envTest, envRef);
 [~, idx] = max(c);
 lagSamples = lags(idx) * downFactor;
+
 if lagSamples > 0
     test = test(lagSamples+1:end);
 else
@@ -95,18 +103,19 @@ hop = 256;
 sigLen = length(x);
 nFrames = max(1,floor((sigLen-frame)/hop)+1);
 rmsVals = zeros(nFrames,1);
-for k=1:nFrames
-    i = (k-1)*hop+1;
-    win = x(i:min(i+frame-1,sigLen));
-    rmsVals(k) = sqrt(mean(win.^2));
-end
+    for k=1:nFrames
+        i = (k-1)*hop+1;
+        win = x(i:min(i+frame-1,sigLen));
+        rmsVals(k) = sqrt(mean(win.^2));
+    end
 mask = rmsVals > thresh;
-if ~any(mask)
-    y = x; return
-end
+    if ~any(mask)
+        y = x; return
+    end
 firstF = find(mask,1,'first');
 lastF = find(mask,1,'last');
 startS = max(1, (firstF-1)*hop+1);
 endS = min(sigLen, (lastF-1)*hop+frame);
 y = x(startS:endS);
-end
+end 
+compareAudioFourier('YNWA_og_acapella.mp4', 'YNWA_fan_acapella.mp4') 
