@@ -112,7 +112,7 @@ function [score, timeScore, timeAxis] = compareAudioFourier(referenceFile, testF
 
 end
 
-%% --- Helper function ---
+%% --- Function trims the silence ---
 function y = trimSilence(x, thresh)
     frame = 512; hop = 256;
     sigLen = length(x);
@@ -142,7 +142,13 @@ end
 compareAudioFourier("YNWA_og_acapella.mp4","YNWA_fan_acapella.mp4")
 
 % Crystal Palace - Glad All Over comparison
-compareAudioFourier("Glad_All_Over_TDCF.m4a","Glad_All_Over_Palace_Fans.m4a");
+compareAudioFourier("Glad_All_Over_TDCF.m4a","Glad_All_Over_Palace_Fans.m4a")
 
 % Incorrect comparison test (should be low similarity)
-compareAudioFourier("Glad_All_Over_TDCF.m4a","YNWA_fan_acapella.mp4");
+compareAudioFourier("Glad_All_Over_TDCF.m4a","YNWA_fan_acapella.mp4")
+
+% Real Madrid - Club Anthem comparison
+compareAudioFourier("Original_Madrid.m4a","A_Capella_Madrid.m4a")
+
+% Incorrect comparison test (should be low similarity)
+compareAudioFourier("Glad_All_Over_TDCF.m4a","A_Capella_Madrid.m4a")
