@@ -141,3 +141,8 @@ end
 %compare accuracy
 compareAudioFourier("YNWA_og_acapella.mp4","YNWA_fan_acapella.mp4")
 
+% Crystal Palace - Glad All Over comparison
+compareAudioFourier("Glad_All_Over_TDCF.m4a","Glad_All_Over_Palace_Fans.m4a");
+
+% Incorrect comparison test (should be low similarity)
+compareAudioFourier("Glad_All_Over_TDCF.m4a","YNWA_fan_acapella.mp4");
